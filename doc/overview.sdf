@@ -1,0 +1,53 @@
+H1:Overview.
+
+This document is a quick guide to managing the set of services that a
+Unix system provides.
+
+In addition there are other areas that we will look at.
+
+!block table
+Area            Description
+Administration  Tasks that an administrator is responsible for.
+Services        The set of services an internet machine provides.
+RCS             Revision control system.
+Future	Other internet services that should be looked into.</column>
+!endblock
+
+H2: Responsibilities of the site administrator.
+
+An administrator is responsible for a wide vanity of tasks.  
+All of these are important for the proper long term operation of any company.
+
+!block table
+Task                    Description
+User/Group Management	The creating and removal of users/groups
+Disk Space              Making sure there is space for users to do thier work, and going after space hogs.
+Logs                    Making sure that they have not grown to large and checking for problems in the logs. 
+Backups                 On site and Off site
+Disaster Recovery       Making sure that failure don't permanently affect the company.
+User support            Answering user questions on how to user the software that exists on the machines.
+Printer management	Setup of all printer resources. <br>
+IP management.          Tracking what machines have been given what IP numbers and name.
+Email                   Act as the site postmaster for failed mail and handle problems when email is not being delivered.
+News                    Making sure the daemons are up and running.
+Virus                   Checking PCs for viruses.
+Software Management	Making sure all software on a machine is legal and that all licenses are up to date.
+!endblock
+
+
+H2:	Internet Services
+
+To best understand what has to be done, look at each the machines
+as a set of services that are provided to users.  
+These services have to be monitored for proper operation.
+
+!block table
+Serivice  Description
+DNS	  How your machines name each other.
+mail      SMTP mail transport.
+aliases   Email aliases
+pop       PC mail access tool.
+uucp      Unattended file transfer.
+samba     PC file access.
+news      Multi-person asynchronous massaging.
+!endblock

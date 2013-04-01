@@ -1,0 +1,77 @@
+# $Id: webaccess.sdf,v 1.2 2000/11/21 20:51:19 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan <drew@ss.org>.
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-01 drew    Initial version
+# -----------------------------------------------------------------------
+#
+!default PASSWD		"/etc/httpd/conf/passwd"
+!default GROUP		"/etc/httpd/conf/group"
+
+H1: Restricted Webserver Access.
+
+H2: Config
+
+The access controls for a file can be added to either a F<.htaccess> file
+or inside a directory or location directive.
+
+The C<AuthUserFile> and C<AuthGroupFile> tell the web server where
+to find the user and group files.
+
+The C<AuthName> is displayed by the browser as part of the user/password
+prompt.
+
+The Limit command controls the actual access, here it
+says the you must belong to the admin group.
+
+Some options are:
+
+* require valid user
+* require user I<username>
+* require group I<groupname>
+
+H3: Example F<.htacess>
+
+!block example
+AuthUserFile  [[PASSWD]]
+AuthGroupFile [[GROUP]]
+
+AuthName "Admin Access"
+AuthType Basic
+
+<Limit POST GET>
+require group admin
+</Limit>
+!endblock
+
+H2: User management
+
+H3: Adding a user.
+
+The passwd file contains the username, a colon, and the encripted password.
+There must not be anything else in this file.
+To add a user edit F<[[PASSWD]]> adding C<user:> to the end of the file.
+Then run 
+E: C<htpasswd -b [[PASSWD]] I<user> I<password>>
+
+The passwd file should now look like:
+
+E: fred:dvFuPcdEmzMCc
+E: user:oARMht2ZYe8Nw
+
+H3: Adding a user to a group
+
+The group file contains lines containing the group name, a colon, and
+a blank seperated list of user names.
+Edit [[GROUP]] adding the new user's name to the line that contains C<admin:>.
+
+The group file should now look like
+
+E: admin: fred user
+
+Changes to passwd and group take effect immediately

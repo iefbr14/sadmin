@@ -1,0 +1,97 @@
+# $Id:$
+# $Source:$
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan <drew@ss.org>.
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-01 drew    Initial version
+# -----------------------------------------------------------------------
+#
+!default HOST_OS	"Linux"
+
+H1:	SAMBA -- PC file access.
+
+SAMBA is daemon that runs on a [[HOST_OS]] system that allows users to access
+their [[HOST_OS]] home directories as if they were networked drives. It also
+allows users to print to [[HOST_OS]] printer and for [[HOST_OS]] systems to print to
+PC printers. Lastly it gives [[HOST_OS]] systems access to shared PC directories
+using a tool that looks like FTP.
+
+The following files are part of the samba system.
+
+!block table
+File            Use
+nmbd		The NetBIOS Name daemon
+smb.conf	The samba configuration file
+smbclient	The client that allows ftp like access
+smbd		The NetBIOS protocol daemon
+smbrun		Support program
+testparm	Test program
+testprns	Test program
+log.debug	Samba logs
+log.nmb.debug	Samba logs
+log.nmb.in	Samba logs
+log.nmb.out	Samba logs
+!endblock
+
+You should also read the smb.conf file.  It contains hints all the
+information you need for configuring option on with smb.
+
+If you make a directory on the PC world sharable then you can get
+access to it from the [[HOST_OS]] system with the following. (Note that the
+\\MACHINE\EXPORT_NAME is set on the PC)
+
+E: % smbclient '\\pc\c' password
+E: Server time is Tue Aug  1 21:46:22 1994
+E:  (timezone is 0 mins from GMT)
+
+You can get a quick list of commands by typing a '?' to the smb prompt.
+
+!block table
+Command         Use
+ls,dir		list files
+lcd		local change directory (on the [[HOST_OS]] system)
+cd		change directory (on the PC)
+get		get a file from the PC
+mget		get lots of file
+put		put a file to the PC
+mput		put lots of files
+mask		mask files
+del,rm		delete (remove) files
+mkdir,md	make a remote directory
+rmdir,rd	remove a remote directory
+prompt		toggle prompting for filenames for mget and mput
+recurse	        toggle directory recursion for mget and mput
+translate	toggle text translation for printing (bin/ascii)
+lowercase	toggle lowercasing of filenames for get
+print		print a file
+printmode	graphics or text set the print mode
+quit,exit	quit
+help,?		help (you can say help command to get a description)
+\!		run a [[HOST_OS]] command.
+!endblock
+
+For example here is a way of updating a person's autoexec.bat file.
+
+
+E: smb: E<gt>; dir
+E:                         IO.SYS    HSR     40566  Thu Sep 30 06:20:00 1993
+E:                      MSDOS.SYS    HSR     38138  Thu Sep 30 06:20:00 1993
+E:                            DOS      D         0  Tue Jul  5 10:52:06 1994
+E:                        WINDOWS      D         0  Tue Jul  5 11:18:52 1994
+E:                           TEMP      D         0  Tue Jul  5 14:44:50 1994
+E:                       MSOFFICE      D         0  Mon Jul 11 12:15:08 1994
+E:                    COMMAND.COM      R     54619  Thu Sep 30 06:20:00 1993
+E:                      MOUSE.COM      A     40382  Tue Feb  9 10:00:02 1993
+E:                     CONFIG.SYS      A       144  Tue Jul  5 14:40:16 1994
+E:                   AUTOEXEC.BAT      A       137  Tue Aug  9 11:55:44 1994
+E:                 52113 blocks of size 512. 34244 blocks available
+E: smb: \E<gt> get autoexec.bat
+E: getting file \autoexec.bat of size 137 bytes as autoexec.bat (1 kb/sec)
+E: smb: \E<gt> !vi autoexec.bat
+E: smb: \E<gt> put autoexec.bat
+E: putting file autoexec.bat of size 137 bytes as \autoexec.bat (1.03008 kb/sec)

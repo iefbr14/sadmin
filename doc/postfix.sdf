@@ -1,0 +1,76 @@
+# $Id: postfix.sdf,v 1.4 2000/11/21 20:57:06 iefbr14 Exp $
+# $Source: /cvsroot/watchdog/doc/sadmin/postfix.sdf,v $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan <drew@ss.org>.
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-01 drew    Initial version
+# -----------------------------------------------------------------------
+#
+!default MAIL_HOST	CLIENT_SERVER
+!default MAIL_BOX	'F</var/spool/mail/user>'
+
+H1: Postfix -- A sendmail replacement.
+
+Postfix is a replacement for sendmail. It provides email connectivity
+between hosts.
+
+The best way for you to understand what is going on is to watch a sample
+message run around the system. First we start with a mail message from
+a user on a unix system.
+
+E: % mailx drew
+E: Subject: test message
+E: All ok
+E: EOT
+
+Postfix always runs as a two step process. It receives the file into
+the directory F</var/spool/postfix/incoming>. It then delivers the message to
+the next step. If the message is local as this one is, then the log
+F</var/log/maillog> will contain something to this effect.
+
+E: Nov 17 18:13:30 [[MAIL_HOST]] postfix/pickup[13539]: 86BE135: uid=0 from=<root>
+E: Nov 17 18:13:30 [[MAIL_HOST]] postfix/cleanup[13559]: 86BE135: message-id=<20001117231330.86BE135@[[MAIL_HOST]]>
+E: Nov 17 18:13:30 [[MAIL_HOST]] postfix/qmgr[890]: 86BE135: from=<root@[[MAIL_HOST]]>, size=295 (queue active)
+E: Nov 17 18:13:30 [[MAIL_HOST]] postfix/local[13561]: 86BE135: to=<agu@[[MAIL_HOST]]>, relay=local, delay=0, status=sent (maildir)
+
+This message is placed into a mailbox ([[MAIL_BOX]]) and is a simple
+text file that can be viewed or edited.
+
+E: From root Tue Aug  9 19:57:44 1994
+E: Return-Path: <root@[[MAIL_HOST]]>
+E: Received: by tor.rand.com (Postfix3.1.28.1 #5)
+E: 	id m0qY13A-001ynJC; Tue, 9 Aug 94 19:57 EDT
+E: Message-Id: <20001117231330.86BE135@[[MAIL_HOST]]>
+E: Date: Tue, 9 Aug 2000 19:57 EDT
+E: From: root 
+E: To: agu
+E: Subject: test message
+E:
+E: All ok
+
+Now lets send a message to someone remote.
+
+E: $ mail god@heaven.com
+E: Subject: message 2
+E: done
+E: EOT
+
+Again the message is put into the input directory.  If the site couldn't
+be reached then you can look at the mail queue with the 'mailq' command.
+
+E: $ mailq
+E: -Queue ID- --Size-- ----Arrival Time---- -Sender/Recipient-------
+E: DE86F35   *     286 Fri Nov 17 18:17:10  root@[[MAIL_HOST]]
+E:                                          god@heaven.com
+E: 
+E: -- 0 Kbytes in 1 Request.
+
+Here the message is shown as still being in the queue.
+To force the queue to be retried you can run the command C<postfix flush>
+
+For more detail information on postfix see {{URL:http://www.postfix.org}}

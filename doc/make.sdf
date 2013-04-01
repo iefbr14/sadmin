@@ -1,0 +1,46 @@
+# $Id: make.sdf,v 1.2 2000/11/21 20:51:19 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 1996-1997, Drew Sullivan (drew@ss.org).
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 1997-Sep-12 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+H1: Make - Recipies for building programs
+
+Most administrators would not think of {{CMD: make}} as being
+a command an administrator would use.  Make is for compiling C programs.
+While that is true, it is also short sighted.  Make is a tool for
+describing dependencies and for collecting rules about those dependencies
+What this means is that any time you run a command that is too simple
+to be a whole script but longer than a few keystrokes, make is a
+good command to capture that information.
+
+Maybe an example would help.  One of the most common things
+an admin has to to do is update DNS.  After changeing it
+you have to signal to named to reload the new tables.  
+This means you have to look up the process-id, and signal it.
+Not hard but a lot of typing.  By using the following {{FILE: Makefile}}
+all you have to type is {{CMD: make reload}}.
+
+!block example
+#
+# Makefile for DNS
+#
+reload:
+	kill -1 `cat /var/run/named.pid`
+	sleep 3
+	tail /var/log/messages
+
+ci:
+	ci -l Makefile named.conf db.*
+
+!endblock
+
+As you can see there is also a command for RCS.  A great reminder
+to check in the new DNS changes.

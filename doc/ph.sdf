@@ -1,0 +1,41 @@
+<h3>1.8	Ph -- The Phone system.</h3>
+There is also system called the 'ph' or Phone system. This is a program that allows you to quickly lookup a name and get the email and phone number for rand personal. Notice that it returns multiple names if more than one person has that name.
+
+
+<pre>% ph paul
+----------------------------------------
+            name: Paul Shevemeto
+            site: Corporate Toronto
+           phone: 905-625-2000
+        email to: p.sheveme@rand.com (p.sheveme@tor.rand.com)
+----------------------------------------
+            name: Paul Meyers
+            site: Minnesota
+        email to: p.meyers@rand.com (p.meyers@min.rand.com)
+----------------------------------------
+            name: Paul Betcha
+            site: Denver
+        email to: p.betcha@rand.com (no account registered)
+----------------------------------------
+            name: Paul Mikle
+            site: Boston
+        email to: p.mikle@rand.com (p.mikle@bos.rand.com)
+----------------------------------------
+</pre><br>
+You can also use wild cards (an '*') at the end of a name and ph will return all of the names that match. First or Last names may be used.
+
+
+<pre>% ph 'det*'
+----------------------------------------
+            name: Andy Detolla
+            site: Rochester
+        email to: a.detolla@rand.com (adetolla@roc.rand.com)
+----------------------------------------
+</pre><br>
+To update the 'Ph' database a 'make ph' will run the programs.  Note: the Ph database is run out of Toronto only. Regional sites will make queries against the Toronto database.
+
+
+Eudora supports access to this server as well. Under the Window menu, the 'Ph' option, will bring up a dialog with two input fields and a results area. The Server is 'ns.rand.com', and the Command is the same argument as used in the ph command. The results are the same as returned by the ph program. Remember to press the Ph button, or press the return key.
+
+
+

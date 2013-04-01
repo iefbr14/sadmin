@@ -1,0 +1,15 @@
+# $Id: README.sdf,v 1.1 2000/11/17 03:00:45 iefbr14 Exp $
+# $Source: /u/src/watchdog/sadmin/README.sdf,v $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan <drew@ss.org>.
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-01 drew    Initial version
+# 2013-Apr-01 drew    Moved to git
+# -----------------------------------------------------------------------
+#
+H1: README - sadmin - System Administration Guide

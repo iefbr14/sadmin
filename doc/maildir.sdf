@@ -1,0 +1,66 @@
+# $Id: maildir.sdf,v 1.4 2000/11/21 20:51:19 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 1996-1997, Drew Sullivan (drew@ss.org).
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-01 drew    Initial version
+# -----------------------------------------------------------------------
+#
+#default SYSTEM_MTA	"qmail"
+!default SYSTEM_MTA	"Postfix"
+#default SYSTEM_TYPE	"Unix"
+!default SYSTEM_TYPE	"Linux"
+
+H1: Maildir -- Mail delivery to client directories.
+
+When [[SYSTEM_MTA]] is set up to deliver mail, it normally delivers mail to
+the F</var/spool/mail> directory.
+
+Instead we have configured mail to be delivered to a subdirectory called
+Maildir in each user's home directory.
+
+!if SYSTEM_MTA eq 'qmail'
+Qmail will deliver automatically to Maildir if the user's home directory
+contains C<Maildir/> in his ~/.qmail file.
+!else
+The postfix system contains the home_mailbox entry in
+F</etc/postfix/main.cf> to force this behavour.
+
+E: # deliver to maildir
+E: home_mailbox = Maildir/
+!endif
+
+Configuring a system to use this has serveral effects.  The first is that
+the default pop and imap servers will not work with maildir.  
+The B<Courier-IMAP> package gives both pop and imap access to the user's
+Maildir directory.
+
+One main benefit from Maildir is that space controls are managed
+on a per user basis since his home directory controls how much
+space he is allowed to have.
+
+The direcectory structure for Maildir is designed to be accessed
+and updated via B<NFS>.  This allows delivery to the Maildir mailbox via
+frontend machine that use NFS to access the user's home directory.
+
+Since every message is kept as a single file, large messages don't clog
+up the user's mailbox and that keeps the load on the pop servers down.
+
+It allows the user direct access to his Maildir mailbox via ftp.
+The directory structure under the Maildir is:
+!block table
+Subdirectory	Use
+tmp		Holds messages while coping them from the mail system to the mail directory.
+new		Holds messages that user has never seen.
+cur		Holds messages that user has seen.
+!endblock
+
+Thus the user can use ftp to get large mail message from the mail system.
+This is important when Microsoft Windows Clients Break.
+
+It is possible for a user to delete their own Maildir.  If this is
+done, then the system will re-create it automatically.  

@@ -1,0 +1,26 @@
+# $Id: resolv.sdf,v 1.3 2000/11/18 17:54:53 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 1996-1997, Drew Sullivan (drew@ss.org).
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 1997-Sep-12 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+H1: DNS for client Linux machines.
+
+The way unix systems find there dns server is via F</etc/resolv.conf>.
+Please note that the is no tailing 'e' on 'resolv'. 
+
+!include "resolv.conf"; example
+
+The search line says that names without an '.' in them should
+have this appended and that name tried as well.
+
+The nameserver line gives you the IP address where the DNS server lives.
+You can have more than one nameserver line to allow for redundent 
+name servers.

@@ -1,0 +1,27 @@
+!init OPT_CONFIG="eg"
+# $Id: sendmail.cf,v 1.1 2000/11/17 03:00:45 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 1996-1997, Drew Sullivan (drew@ss.org).
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 1997-Sep-12 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+H1: Sendmail - 
+
+Sendmail is truly a read daemon.  It is large, unruly and ugly.
+It also performs magic.
+
+H2: Sendmail.cf
+
+H2: ToDo
+
+* Define requirements
+* Write docuementation
+* Write scripts
+

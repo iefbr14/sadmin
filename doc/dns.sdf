@@ -1,0 +1,120 @@
+# $Id: dns.sdf,v 1.3 2000/11/20 16:23:00 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan <drew@ss.org>.
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-01 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+#
+# this file is for systems with only 1 level of DNS.  If you 
+# are doing sub-domains then include dnssub.sdf
+#
+!default CLIENT_DOMAIN  "home.com"
+!default CLIENT_SERVER  "server.home.com"
+!default CLIENT_PC      "pc.home.com"
+
+!default DNS_DIRECTORY	"/var/named"
+!default DNS_DOMAIN	CLIENT_DOMAIN
+!default DNS_SERVER	'localhost'
+!default DNS_SERVER_IP	'127.0.0.1'
+!default DNS_NET	'192.168.1'
+!default DNS_HOST	"ns.[[DNS_DOMAIN]]"
+
+H1: Domain Name Services
+
+DNS is the standard system for mapping human names with machine friendly
+IP numbers and is a replacement for {{FILE: /etc/hosts}}.  The problem with 
+{{FILE: /etc/hosts}} is that when a new host is added to the system
+you have to update all other hosts with this new information.  As the
+number of hosts grow past a few servers it becomes a major administrative
+task.  With the scale of the internet, it becomes totally imposible. 
+DNS is implemented by a program called C<named>.
+
+# Under Solaris 2.3 is started from the /etc/rc2.d/S72inetsvc script. 
+
+The dns data files are kept in [[DNS_DIRECTORY]].
+
+!block table
+File			Usage
+RCS			RCS Revision control directory.
+Makefile		Helper file.
+db.[[DNS_DOMAIN]]	Defines the name found under [[DNS_DOMAIN]].
+db.[[DNS_NET]]		Defined the reverse mappings.
+db.localhost		Localhost name.
+db.127.0.0		Localhost network.
+named.boot		List of files used by named.
+named.cache		Startup file containing initial IP numbers used by named.
+!endblock
+
+!include 'named.conf'; example
+
+The file /etc/named.conf is symlinked to the real file
+{{[[DNS_DIRECTORY]]/named.conf}}. It lists the directory where all of the
+DNS files live, the site domain name, and a set of primary domains. 
+The localhost and 127.0.0 domains are for the localhost IP address (127.0.0.1)
+and never need changing.
+
+The primary (db.[[DNS_DOMAIN]]) is for all of '[[DNS_DOMAIN]]' and only
+needs to be changed if new primary sites are added. 
+
+H2: What to change: db.[[DNS_NET]]
+
+When adding a new host you first must assign it an IP number. Each network must
+contain only one IP number per host. (Hosts may have more than one IP number
+when they are connected to more than one network).  The db.[[DNS_NET]] file
+is used to map IP numbers back to names and is used by daemons for validation.
+It is also used to track the assigned IP numbers.  This should
+be the only authority that defines waht IP numbers are in use.
+
+Note that the ';' is used as the comment character.  When adding a new
+machine, the last component of the IP number is in the left column. The
+'IN PTR' is literal text, and the 'machine.RRR.rand.com.' is the full
+machine name. Notice the trailing period on the machine name, this is
+required.  In DNS files, any names that don't end with a period, have
+the domain appended.  This comes from the domain field on the primary line
+as listed in the /etc/named.boot file.  Lastly notice the 'Serial number'.
+This is used by DNS servers to track what files have been changed.
+Whenever a change is made to a 'db' file, you must increment the serial
+number.
+
+!include 'db.server' ; example
+
+The machine name is in the left column. The 'IN A' record maps the name to
+an IP address. The 'IN HINFO' is optional and contains the machine-type
+and OS-name as a pair of quoted strings. The 'IN TXT' record is free form
+text and we use it to track the Owner of the machine.  If it is a PC that
+is the person who is the primary user, or for a multi-user box. it is the
+Administrator to contact.  Again don't forget to increment the serial number
+after making a change.
+
+H2: Reloading DNS
+
+Lastly you need to tell the DNS server (named) that these files have
+changed. The normal command is 'kill -1 `cat /etc/named.pid`', but I find
+this too hard to type and remember. There is a makefile that contains useful
+canned commands and one is 'reload'. A 'make reload' causes the DNS server
+to reload the database. It is a good idea to check /var/log/messages
+for any errors.
+
+E: % make reload
+E:      : did you remember to update the serial number?
+E:      kill -1 `cat /etc/named.pid`
+E:      tail /var/adm/messages
+
+For example if we had added a new machine called pc at ip 
+address [[DNS_NET]].99, then if we do an 'nslookup' on both the machine
+and it's IP number we sould see:
+
+E: % nslookup pc
+E: Server:  [[DNS_SERVER]]
+E: Address:  [[DNS_SERVER_IP]]
+E: 
+E: Name:    pc.[[DNS_DOMAIN]]
+E: Address:  [[DNS_NET]].99
+

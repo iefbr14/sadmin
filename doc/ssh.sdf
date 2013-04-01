@@ -1,0 +1,101 @@
+# $Id: ssh.sdf,v 1.2 2000/11/21 20:51:19 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan <drew@ss.org>.
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-01 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+H1: SSH - secure shell client.
+
+H2: sshd - the server demon.
+
+The server component B<sshd> is used to allow remote login, copying and command
+execution.  Configureation is keep in F</etc/ssh/sshd_config>.  It is started
+normally by the rc.d startup system.  Detail information can be found
+using C<man sshd> command.
+
+H2: Client tools
+
+The client tools: slogin, scp, and ssh are used to access remote
+systems via the secure server.  You will be prompted for the remote
+user's password every time you run one of these commands.
+
+H3: slogin C<user@host>
+
+To login to a another system as yourself then simple run: C<slogin I<host>>.
+You only need to specify the full user@host if you also want to change
+the user name that you are loging in as.
+
+H3: scp C<from...> C<to>
+
+The general syntax to specify a file is C<user@host:/path/file>.
+
+If you omit the C<user@> part then your userid is assumed.
+If you omit the C<host:> part then the current host is assumed.
+If you what to specify the C<user@> part, then you MUST specify the C<host:> part.
+
+H3: ssh C<user@host> 'C<command>'
+
+The ssh command allows you run commands on remote systems.
+It can also be part of a shell pipeline, but remember that any filenames
+specified in the C<command> are relative to the remote user's home directory.
+
+H3: authorized_keys
+
+Typing all of those passwords can be bothersome.  The ssh system
+allows you to set up trust relationships. 
+
+First run C<ssh-keygen>.  You should keep all of the defaults
+that you are prompted for.
+
+> Generating RSA keys:  ..........ooooooO.......ooooooO
+> Key generation complete.
+> Enter file in which to save the key (/home/agu/.ssh/identity): 
+> Created directory '/home/agu/.ssh'.
+> Enter passphrase (empty for no passphrase): 
+> Enter same passphrase again: 
+> Your identification has been saved in /home/agu/.ssh/identity.
+> Your public key has been saved in /home/agu/.ssh/identity.pub.
+> The key fingerprint is:
+> f8:2a:b5:47:0a:e9:f3:db:40:49:54:30:19:91:6c:00 agu@red.wightman.on.ca
+
+This generates your local identity files.  The F<.ssh/identity> file
+must be kept private.  This file is your private key.  The F<.ssh/identity.pub>
+file is you public key.  This file needs to be added to the remote's 
+F<.ssh/authorized_keys> file.
+
+If you try C<slogin localhost>, you will notice that you are prompted
+for a password.  Now C<cp .ssh/idenity.pub .ssh/authorized_keys> and
+retry the C<slogin localhost> command.  You will not be prompted for
+a password this time.
+
+The last step is to copy the identiy.pub file to the remote machine.
+
+The command C<ssh user@remote 'cat E<gt>E<gt>.ssh/authorized_keys' E<lt>.ssh/identity.pub>
+will add your key to the remote system.  
+
+
+H2: Install
+
+The rpms come from redhat contrib site.  The rpm command
+listed below will install the text only version of the commands.
+Lastly the sshd start will start the server and not require a reboot.
+
+> cd /home/ftp/rpms/openssh
+> rpm -Uv openssl-0.9.5a-1.i386.rpm \
+>	openssh-2.1.1p1-1.i386.rpm \
+>	openssh-clients-2.1.1p1-1.i386.rpm \
+>	openssh-server-2.1.1p1-1.i386.rpm 
+> /etc/rc.d/init.d/sshd start
+
+H2: Configuration
+
+No additional configuration is required.  Detailed configuration
+for client commands are available via the man pages.
+

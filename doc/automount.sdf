@@ -1,0 +1,26 @@
+# $Id: automount.sdf,v 1.1 2000/11/16 16:05:06 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 1996-1997, Drew Sullivan (drew@ss.org).
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 1997-Sep-12 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+H1: Automounter - Auto-matically mounting NFS directories
+
+One of the bigest problems with NFS managed sites is the order that
+machines come up in.  If you are not careful you can get two machine
+dependent on each other trying to boot.
+
+The automounter eliminates this.
+
+H2: ToDo
+
+* Define requirements
+* Write docuementation
+* Write scripts

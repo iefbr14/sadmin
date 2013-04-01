@@ -1,0 +1,85 @@
+# $Id: pop.sdf,v 1.4 2000/11/20 16:23:00 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan (drew@ss.org).
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Sep-12 drew    Initial version
+# -----------------------------------------------------------------------
+#
+!default SYSTEM_TYPE	"Linux"
+
+!default POP_SERVER	"localhost"
+!default POP_SERVER_IP	"127.0.0.1"
+!default POP_USER	"agu"
+
+H1: POP - Post Office Protocol - The mailbox server.
+
+The POP daemon is used by a PC client to read email from their [[SYSTEM_TYPE]]
+mail box..  This implies that the user has a valid [[SYSTEM_TYPE]] account
+and password (found in /etc/passwd).  The user should also have a valid
+home directory.
+
+If you can't send him mail on the [[SYSTEM_TYPE]] system there is no
+possibility that the mail will able to be picked up.
+
+
+H2: How to test pop.
+
+Here is how to test pop.  The following simple dialog show the
+conversation between a  SMTP client and server.  Since you can run this
+dialog by hand it is possible to fully test that everthing is working.
+
+The first step is telnet to the pop server.  It should respond
+with a C<+OK> banner.  All pop messages are prefixed either C<+OK> or
+C<-ERR>.
+
+E: # B<telnet [[POP_SERVER]] pop-3>
+E: Trying [[POP_SERVER_IP]]...
+E: Connected to [[POP_SERVER]] ([[POP_SERVER_IP]]).
+E: Escape character is '^]'.
+E: +OK Hello there.
+
+Try an invalid command to see an error message.
+
+E: B<hi>
+E: -ERR Invalid command.
+
+Log in as a generic user B<[[POP_USER]]>.
+
+E: B<user agu>
+E: +OK Password required.
+E: B<pass XXXXXXXX>
+E: +OK logged in.
+
+You can use B<list> to see if there any messages?
+
+E: B<list>
+E: +OK POP3 clients that break here, they violate STD53.
+E: 1 377
+E: 2 565
+E: 3 575
+E: 4 420
+E: .
+
+The violation STD53 message comes from B<Courier-IMAP> package.
+Some clients seem to have problems with the list command.
+
+Lastly you can try deleting messages.
+
+E: B<dele 1>
+E: +OK Deleted.
+
+Is it a sufficient test to say "telnet ... user ... pass ... list".
+If there are not any errors reported, then tht user's acount is OK,
+And the problem lies elsewhere (probably with the client).
+
+Everthing is working, so you can use B<quit> to close our connection.
+
+E: B<quit>
+E: +OK Bye-bye.
+E: Connection closed by foreign host.
+

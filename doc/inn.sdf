@@ -1,0 +1,146 @@
+# $Id: inn.sdf,v 1.1 2000/11/16 16:05:06 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 1996-1997, Drew Sullivan (drew@ss.org).
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 1997-Sep-12 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+H1: News -- The Usenet's answer to bbs.
+
+Network news is like a world wide BBS, just don't call it that. It allows
+users to share information with other users in a broadcast rather than
+a point to point method that email uses.
+
+Each Article (like an email message) when posted (mailed) is assigned a
+newsgroup. These newsgroups are a way of categorizing the article. This
+allows the readers to select only groups that pertain to there own
+interests and not have to read every article.
+
+Currently there are about 8,000 newsgroups and 400,000 readers. Average
+volume per day is 30,000 articles which consumes 100 Mb of disk space. It
+take a V32bis modem 14 hours to move the compressed data between sites.
+
+Not every site wants a full news feed. By limiting the set of newsgroups
+a very moderate feed consumes only a small portion of a serial link.
+
+There are two main directories that an administrator needs to know
+about. The /usr/lib/news tree and the /var/spool/news tree.
+
+The /var/spool/news/ tree contains the articles. One article per
+file filed under the news group name. For example the articles
+from the group comp.os.linux would be filed in the directory
+/var/spool/news/comp/os/linux/* Each article is filed as a number which
+starts at 1 and continues upward.  In /usr/lib/news the lowest and highest
+filed number for every group is kept in a file called 'active'. The first
+field is the group name, then comes the highest filed article, then the
+lowest, and last a flag saying whether this article is to be kept locally.
+
+
+E: comp.os.geos 00000003722 00000003706 y
+E: comp.os.linux 00000013625 00000013472 y
+E: comp.os.linux.admin 00000011529 00000010617 y
+
+Control for what groups get sent are kept in the newsfeeds file:
+
+E: ##  This is the local site.
+E: ##  The &quot;pattern&quot; field gives the initial subscription list for
+E: ##  all other sites.  You might want to put &quot;!control,!junk,!&lt;local&gt;.*&quot;
+E: ##  there.  The &quot;distrib&quot; subfield limits incoming articles.
+E: ME:\
+E:         *,!to,to.rand\
+E:         ::
+E:
+E: # send header data to NOV, the news overview database program
+E: {overview}:*:Tc,WO:/usr/lib/news/bin/overchan
+E:
+E: uunorth:\
+E:         *,!rand,\
+E:         !to/!to:Tf,Wnm:/usr/spool/news/out.going/uunorth
+
+E: You need to think of this as a set of ':' separated fields.
+E: The first is the site you are exchanging news with.
+E: The seconds is a comma separated list of groups to include or exclude.
+E: The third is magic that describes the format of the batch file.
+E: The forth is the name of the batch file.
+
+Notice the 'out.going' directory. This and the 'in.coming' directory
+are used by the news system, and must never be removed.
+
+The most important program for controlling the news system is the
+ctlinnd program (in /usr/lib/news/bin). To check everything is running
+you can do a 'ctlinnd mode' request. I always cd /usr/lib/news and run
+'bin/ctlinnd ...'.
+
+
+E: % bin/ctlinnd mode
+E: Server running
+E: Allowing remote connections
+E: Parameters c 14 i 0 (0) l 1000000 o 51 t 300 normal specified
+E: Not reserved
+E: Readers separate enabled
+E: </pre><br>
+E: The ctlinnd has a who host of commands that are useful.
+
+
+E: % bin/ctlinnd -h
+E: Command summary:
+E:   addhist id arr exp post path... Add history line
+E:   allow reason...               Allow remote connections
+E:   begin site                    Start newly-added site
+E:   cancel id                     Cancel message locally
+E:   changegroup group rest        Change mode of group
+E:   checkfile                     Check syntax of newsfeeds file
+E:   drop site                     Stop feeding site
+E:   flush site                    Flush feed for site*
+E:   flushlogs                     Flush log files
+E:   go reason...                  Restart after pause or throttle
+E:   hangup channel                Hangup specified incoming channel
+E:   mode                          Print operating mode
+E:   name nnn                      Print name of specified channel*
+E:   newgroup group rest creator   Create new group
+E:   param letter value            Change command-line parameters
+E:   pause reason...               Short-term pause in accepting articles
+E:   readers flag text...          Enable or disable newsreading
+E:   refile path group             Refile an article
+E:   reject reason...              Reject remote connections
+E:   reload what reason...         Re-read config files*
+E:   renumber group                Renumber the active file*
+E:   reserve reason...             Reserve the next pause or throttle
+E:   rmgroup group                 Remove named group
+E:   send feed text...             Send text to exploder feed
+E:   shutdown reason...            Shut down server
+E:   kill signal site              Send signal to site's process
+E:   throttle reason...            Stop accepting articles
+E:   trace innd|#|nnrpd flag       Turn tracing on or off
+E:   xabort text...                Abort the server
+E:   xexec path                    Exec new server
+E: *   Empty string means all sites/groups/etc.
+E: ... All trailing words are glued together.
+
+When making changes to the newsfeeds file you should always run a
+checkfile. Only if it reports Ok do you do a reload of the newsfeeds.
+
+E: % bin/ctlinnd checkfile
+E: Ok
+E: # if all is Ok then
+E: % bin/ctlinnd reload newsfeeds 'example'
+E: Ok
+
+Adding a group is done by editing the active file. You have to  pause
+the innd daemon, add the new entry to the active file, then have innd
+reload the active and then have it continue.
+
+
+E: % bin/ctlinnd pause 'active update'
+E: Ok
+E: % vi active
+E: % bin/ctlinnd reload active 'active update'
+E: Ok
+E: % bin/ctlinnd go 'active update'
+E: Ok

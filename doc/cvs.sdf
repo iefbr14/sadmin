@@ -1,0 +1,143 @@
+# $Id: cvs.sdf,v 1.4 2000/11/21 20:51:19 iefbr14 Exp $
+# $Source: /cvsroot/watchdog/doc/sadmin/cvs.sdf,v $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan <drew@ss.org>.
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-01 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+H1: CVS (Concurrent Version Control System)
+
+CVS (Concurrent Version Control System) is a powerful tool which allows
+concurrent development of textual information by multiple users. It uses RCS
+underneath and has application layer interface as a wrapper on top RCS.
+
+The number of commands that you need to know are quite small.
+
+!block table; style=grid
+Command     	Usage      
+cvs get	    	To get a local copy of the repository's files.
+cvs add	    	To tell the repository you are adding this file.
+cvs remove	To tell the repository you have removed this file.
+cvs update	To sync updates from the repository into your copy.
+cvs diff	To see differences between revisions.
+cvs commit	To put your changes back into the repository.
+!endblock
+
+To better understand how CVS works, here is a sample session. We get
+a copy of the project from the CVS system.
+
+E: $ cvs get eg
+E: cvs checkout: Updating eg
+
+This has now created a directory C<eg> that we can work in.
+
+Now lets create a file in eg called F<ToDo> that we can play with.
+
+E: cd eg
+E: echo "To many things" >ToDo
+
+After spend a lot of time working on this project manage system,
+we now can add it to our CVS repostitory
+
+E: $ cvs add ToDo
+E: cvs add: scheduling file `ToDo' for addition
+E: cvs add: use 'cvs commit' to add this file permanently
+
+E: cvs commit
+E: cvs commit: Examining .
+E: RCS file: /home/cvs/eg/ToDo,v
+E: done
+E: Checking in ToDo;
+E: /home/cvs/eg/ToDo,v  <--  ToDo
+E: initial revision: 1.1
+E: done
+
+We make some more changes and create a second version.
+
+E: $ echo "More stuff to do" >>ToDo
+
+E: $ echo "More Stuff" >>ToDo
+E: $ cvs commit
+E: cvs commit: Examining .
+E: Checking in ToDo;
+E: /home/cvs/eg/ToDo,v  <--  ToDo
+E: new revision: 1.2; previous revision: 1.1
+E: done
+
+Then some does the follow to make one more change to the file.
+
+E: $ echo "New information added"  >>ToDo
+
+Later we can check to see what changes have been made to a file.
+
+E: $ cvs diff ToDo
+E: Index: ToDo
+E: ===================================================================
+E: RCS file: /home/cvs/eg/ToDo,v
+E: retrieving revision 1.2
+E: diff -r1.2 ToDo
+E: 2a3
+E: > New information added
+
+Oh-oh, someone added stuff that should not be there! Lets take a look at the
+log.
+
+E: $ cvs log ToDo
+E: 
+E: RCS file: /home/cvs/eg/ToDo,v
+E: Working file: ToDo
+E: head: 1.2
+E: branch:
+E: locks: strict
+E: access list:
+E: symbolic names:
+E: keyword substitution: kv
+E: total revisions: 2;     selected revisions: 2
+E: description:
+E: ----------------------------
+E: revision 1.2
+E: date: 2000/11/16 23:39:32;  author: watchdog;  state: Exp;  lines: +1 -0
+E: first version
+E: ----------------------------
+E: revision 1.1
+E: date: 2000/11/16 23:37:57;  author: watchdog;  state: Exp;
+E: second version
+E: =============================================================================
+
+We see that two revisions exists (1.1 and 1.2) and that they were both
+created by drew. 
+
+If we delete ToDo and C<cvs update> it will be fetch the current
+version from the repository.
+
+E: $ rm ToDo
+E: $ cvs update
+E: cvs update: Updating .
+E: cvs update: warning: ToDo was lost
+E: U ToDo
+
+Lastly you can place id information into your files.
+When you create a document you can add
+
+E:   $C<Id:>$
+E:   $C<Source:>$
+
+to the document and CVS will fill in the rest after the the first 
+C<cvs commit> command.  These lines are maintained by CVS and contain the 
+last C<cvs commit> date.  
+
+Here is the Id and Source information for this docuement.
+
+E:   $Id: cvs.sdf,v 1.4 2000/11/21 20:51:19 iefbr14 Exp $
+E:   $Source: /cvsroot/watchdog/doc/sadmin/cvs.sdf,v $
+
+H2: Addition Documentation
+
+* {{URL:http://www.linuxdoc.org/HOWTO/CVS-RCS-HOWTO.html}}

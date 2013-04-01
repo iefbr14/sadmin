@@ -1,0 +1,34 @@
+# $Id: fetchmail.sdf,v 1.1 2000/11/21 20:53:46 iefbr14 Exp $
+# $Source: /cvsroot/watchdog/doc/sadmin/fetchmail.sdf,v $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan <drew@ss.org>.
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Nov-15 drew    Initial version
+# -----------------------------------------------------------------------
+#
+!default FETCH_HOST	"B<HOST>"
+!default FETCH_USER	"B<USER>"
+!default FETCH_PASS	"B<PASS>"
+
+H1: Using fetchmail
+
+You can use fetchmail to test that services are working.
+
+H2: Config
+
+In your F<~/.fetchmailrc> add the following.
+
+E: poll [[FETCH_HOST]] protocol pop3 user [[FETCH_USER]] password [[FETCH_PASS]]
+E:
+E: poll [[FETCH_HOST]] protocol imap user [[FETCH_USER]]  password [[FETCH_PASS]]
+
+Then run the command: 
+
+E: fetchmail -v
+
+This will show you the conversation that takes place with the servers.

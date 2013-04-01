@@ -1,0 +1,118 @@
+H1:Smail -- A sendmail replacement.
+
+Smail is a replacement for sendmail. It provides email connectivity
+between hosts.
+
+The best way for you to understand what is going on is to watch a sample
+message run around the system. First we start with a mail message from
+a user on a unix system.
+
+E: % mailx drew
+E: Subject: test message
+E: All ok
+E: EOT
+
+Smail always runs as a two step process. It receives the file into the directory /var/spool/smail/input. It then delivers the message to the next step. If the message is local as this one is, then the log (/var/spool/smail/log/logfile) will contain something to this effect.
+
+E: 08/09/94 19:57:44: [m0qY13A-001ynJC] received
+E:             from: root
+E:          program: mail
+E:             size: 105 bytes
+E: 08/09/94 19:57:44: [m0qY13A-001ynJC] delivered
+E:               to: drew
+E:          orig-to: drew
+E:         director: user
+E:        transport: local
+
+This message is placed into a mailbox (/var/mail/user) and is a simple
+text file that can be viewed or edited.
+
+E: From root Tue Aug  9 19:57:44 1994
+E: Return-Path: &lt;root&gt;
+E: Received: by tor.rand.com (Smail3.1.28.1 #5)
+E: 	id m0qY13A-001ynJC; Tue, 9 Aug 94 19:57 EDT
+E: Message-Id: &lt;m0qY13A-001ynJC@tor.rand.com&gt;
+E: Date: Tue, 9 Aug 94 19:57 EDT
+E: From: root (Admin)
+E: To: drew
+E: Subject: test message
+E: Content-Length: 7
+E:
+E: All ok
+
+Now lets send a message to someone remote.
+
+E: % mailx drew@lethe.north.net
+E: Subject: message 2
+E: done
+E: EOT
+
+Again the message is put into the input directory.  If the site couldn't
+be reached then you can look at the mail queue with the 'mailq' command.
+
+E: % mailq
+E: m0qY16S-001ynJC From: root  (in /usr/spool/smail/input)
+E:                 Date: Tue, 9 Aug 94 20:01 EDT
+E:                 Args: -oem -oMP mail drew@lethe.north.net
+
+Here the message is shown as still being in the queue.
+
+Smail then goes through a number of operations to figure out how
+to deliver the message. We can see these rules with the 'address'
+command. This is a good way to test how a message is to be delivered.
+
+E: % address user@lethe.north.net
+E: Trying lethe.north.net
+E: user@lethe.north.net: lethe.north.net matched by inet_MX:
+    E: routed user@lethe.north.net --&gt; user@lethe.north.net at lethe.north.net
+      E: transport hint mx 5 lethe.north.net
+        E: address hint lethe.north.net 198.52.32.66
+      E: transport hint mx 10 uunorth.north.net
+        E: address hint uunorth.north.net 198.52.32.1
+E: smtp        lethe.north.net :: user@lethe.north.net
+
+The above example also shows how MX records from the DNS are used.
+The MX stands for Message eXchange and they give hints as to how mail
+should be routed.  The number after the 'mx' is used by smail to order
+the attempts for sending the email.  The remote sites are attempted in
+ascending order and the first machine that responds to the smail daemon
+will have the message delivered to it.  The message then becomes the
+responding sites responsibility for delivery.
+
+If you want to force smail to run through it's message queue, then the
+following command line will do that.
+
+E: % smail -q -v
+E: opened and locked spool file /usr/spool/smail/input/0qVhTp-001ynsC
+E: Trying chi.rand.com
+E: &lt;dswiderk@chi.rand.com&gt;: chi.rand.com matched by inet_MX:
+E:     routed &lt;dswiderk@chi.rand.com&gt; --&gt; dswiderk@chi.rand.com at chi.rand.com
+E:       transport hint mx 10 chi.rand.com
+E:         address hint chi.rand.com 198.242.32.1
+E: transport smtp uses driver smtp
+E: lock retry/smtp/chi.rand.com
+E: lock failed (will defer failure) retry/smtp/chi.rand.com
+E: 
+E: opened and locked spool file /usr/spool/smail/input/0qY16S-001ynJC
+E: Trying lethe.north.net
+E: drew@lethe.north.net: lethe.north.net matched by inet_MX:
+E:    routed drew@lethe.north.net --&gt; drew@lethe.north.net at lethe.north.net
+E:      transport hint mx 5 lethe.north.net
+E:        address hint lethe.north.net 198.52.32.66
+E:      transport hint mx 10 uunorth.north.net
+E:        address hint uunorth.north.net 198.52.32.1
+E: transport smtp uses driver smtp
+E: lock retry/smtp/lethe.north.net
+E: lock succeeded (will defer failure) retry/smtp/lethe.north.net
+E: transport smtp: connect to host lethe.north.net [198.52.32.66]/smtp...connected
+E: unlock (success) retry/smtp/lethe.north.net
+E: write_log:delivered
+E: |             via: lethe.north.net
+E: |              to: drew@lethe.north.net
+E: |         orig-to: drew@lethe.north.net
+E: |          router: inet_MX
+E: |       transport: smtp
+
+Notice the failure on trying to reach chi.rand.com, but the success on
+reaching lethe.north.net.
+

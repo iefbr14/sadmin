@@ -1,0 +1,49 @@
+# $Id: config.sdf,v 1.2 2000/11/18 04:06:24 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan <drew@ss.org>.
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-01 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+H1: System Admin Config
+
+This docuemnt was prepared for [[CLIENT_GROUP]] at [[CLIENT_NAME]].
+
+The config values are used as place holders
+
+!block table
+Config           Value
+Domain	         [[CLIENT_DOMAIN]]
+Server host      [[CLIENT_SERVER]]
+Client host      [[CLIENT_PC]]
+Eg email address [[CLIENT_EMAIL]]
+!endblock
+
+The config values are used to tune this docuement:
+
+!block table
+Config           Value                 Possible
+Server OS        [[SYSTEM_TYPE]]       Linux Unix NT
+Server MTA       [[SYSTEM_MTA]]        Sendmail Smail Postfix Qmail Exim
+!endblock
+
+The config values are used to tune this docuement:
+
+!block table
+Config           Value                 Default
+
+DNS_DIRECTORY    [[DNS_DIRECTORY]]     /var/named
+DNS_DOMAIN       [[DNS_DOMAIN]]	       [CLIENT_DOMAIN]
+DNS_HOST         [[DNS_HOST]]	       ns.[DNS_DOMAIN]
+DNS_IP           [[DNS_IP]]            192.168.1.1
+DNS_SUB          [[DNS_SUB]] 	       internal
+
+POP_SERVER       [[POP_SERVER]]        [CLIENT_SERVER]
+POP_SERVER_IP    [[POP_SERVER_IP]]     [CLIENT_SERVER]
+!endblock

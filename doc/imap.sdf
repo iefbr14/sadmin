@@ -1,0 +1,45 @@
+# $Id: imap.sdf,v 1.2 2000/11/18 04:06:24 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan (drew@ss.org).
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-12 drew    Initial version
+# -----------------------------------------------------------------------
+#
+!default IMAP_SERVER		CLIENT_SERVER
+!default IMAP_SERVER_IP		CLIENT_SERVER_IP
+
+H1: IMAP
+
+H2: Overview
+
+The IMAP daemon is used by a PC client to read email from their [[SYSTEM_TYPE]]
+mail box..  This implies that the user has a valid [[SYSTEM_TYPE]] account
+and password (found in /etc/passwd).  The user should also have a valid
+home directory.
+
+The main difference between IMAP and POP is that IMAP is designed to
+keep mail on the server rather than on the PC.  It also has the
+ability to create and manage folders on the server.
+
+H2: How to test imap.
+
+Unlike pop, its is not easy to simulate an IMAP connection.  You can
+still telnet to it and it will respond with a sign-on.  You at least
+know that the IMAP server is responding.
+
+E: $ B<telnet [[IMAP_SERVER]] imap>
+E: Trying [[IMAP_SERVER_IP]]...
+E: Connected to [[IMAP_SERVER]] ([[IMAP_SERVER_IP]]).
+E: Escape character is '^]'.
+E: * OK Courier-IMAP ready. Copyright 1998-2000 Double Precision, Inc.  See COPYING for distribution information.
+E: B<^]q>
+E: $ 
+
+If the server is responding then configure netscape or some other IMAP
+client and check that you can see the same messages that are available
+via pop.

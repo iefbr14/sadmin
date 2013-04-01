@@ -1,0 +1,17 @@
+/^/home/ftp/rpms/6.2/RedHat/RPMS/.libstdc++-2.9.0-30.i386.rpm.7glalf/.*$/: nested *?+ in regexp at Lento/CML.pm line 726.
+
+vi +726 Lento/CML.pm
+my @matches = grep { /^\Q$srcpath\E\/.*$/ } keys %{$Lento::CML::closed};
+
+vi +171 Lento/Reintegrate.pm 
+
+    symlink($name, $linkname) || die "symlink($name, $linkname) failed: $!";
+
+    unless (symlink($name, $linkname)) {
+        warn "symlink($name, $linkname) failed: $!";
+
+        if (unlink($linkname) && !symlink($name, $linkname)) {
+                die "symlink($name, $linkname) failed retry: $!";
+        }
+    }
+

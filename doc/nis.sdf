@@ -1,0 +1,72 @@
+# $Id: nis.sdf,v 1.3 2000/11/21 20:51:19 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan (drew@ss.org).
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 1997-Sep-12 drew    Initial version
+# -----------------------------------------------------------------------
+#
+!default YP_SERVER	"ns.[[CLIENT_DOMAIN]]"
+!default YP_DOMAIN	"nisdomain"
+
+H1: NIS - Network Information Services.
+
+NIS is used to share passwd and other config files that live in F</etc>.
+with client machines.  It used to be called Yellow Pages and hence
+a lot of the files and services start with the C<yp> prefix.
+
+One of the problems with NIS is the use of domainname as the
+definition of namespace.  The NIS domainname is NOT the same as the
+DNS domainname.  Normally NIS domainnames are simple (not '.'s) names
+and the name space is totally separate from the DNS name space.
+
+H2: Clients and Servers
+
+The main server is called B<ypserv>, and the client is called B<ypbind>.
+
+H2: Services available
+
+Some of the files that can be shared are:
+
+!block table
+Services	Description
+passwd		User accounts
+group		Group names
+netgroup	Groups of machines
+automount	Dynamic NFS mount points
+hosts		Use DNS instead
+!endblock
+
+H2: B<ypserv> config
+
+The config files for ypserv live in F</var/yp> directory.  
+The F<Makefile> uses the NIS domainname (B<[[YP_DOMAIN]]>) as a
+directory name and builds the database under this directory.
+
+By runing make in the F</var/yp> directory you get a set of messages
+such as:
+
+E: Updating passwd.byname...
+E: Updating passwd.byuid...
+E: Updating group.byname...
+E: Updating group.bygid...
+E: Updating netid.byname...
+E: Updating shadow.byname... Ignored -> merged with passwd
+
+This tells you the names of the files it is processing.
+One thing to remember is that UIDs less than 500 and GIDs less
+than 500 are not added to this database.
+
+H2: B<ypbind> config
+
+For  F</etc/yp.conf> contains a line of the form:
+
+E: ypserver [[YP_SERVER]]
+
+This tells B<ypbind> where to find the NIS server.  There is also
+a broadcast version but there are security problems with allowing
+this method of contacting the server.

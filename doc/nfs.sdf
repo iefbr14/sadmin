@@ -1,0 +1,24 @@
+# $Id: nfs.sdf,v 1.1 2000/11/16 16:05:06 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 1996-1997, Drew Sullivan (drew@ss.org).
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 1997-Sep-12 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+H1: NFS - Network File System.
+
+As {{ORG:SUN}} says: the Network is the machine.  What this means is
+that users don't care which machine they log into, so long as
+there data programs and date are available.
+
+H2: ToDo
+
+* Define requirements
+* Write docuementation
+* Write scripts

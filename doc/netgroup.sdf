@@ -1,0 +1,27 @@
+# $Id: netgroup.sdf,v 1.1 2000/11/16 16:05:06 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 1996-1997, Drew Sullivan (drew@ss.org).
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 1997-Sep-12 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+H1: netgroup - Managing sub-groups of user and hosts
+
+The netgroup file is used to define a group of users {{E: Administrators}}
+or hosts {{E: Workstations}} for administrative purposes.
+
+For example, anyone can sign onto a workstation, but only administrators
+can sign onto production machines.  The netgroup file allows
+this kind of control.
+
+H2: ToDo
+
+* Define requirements
+* Write docuementation
+* Write scripts

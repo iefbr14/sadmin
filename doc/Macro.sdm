@@ -1,0 +1,37 @@
+# $Id: Macro.sdm,v 1.2 2000/11/18 04:06:24 iefbr14 Exp $
+# $Source: /cvsroot/watchdog/doc/sadmin/Macro.sdm,v $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan <drew@ss.org>.
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-01 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+#
+# Sadmin Macros
+#
+!default CLIENT_NAME		'client'
+!default CLIENT_GROUP		'Tech Support'
+!default CLIENT_DOMAIN		'client.com'
+!default CLIENT_SERVER		'server.client.com'
+!default CLIENT_SERVER_IP	'192.168.1.1'
+!default CLIENT_PC		'pc.client.com'
+!default CLIENT_PC_IP		'192.168.1.99'
+!default CLIENT_EMAIL		'support@client.com'
+
+!default SYSTEM_TYPE		'Linux'
+!default SYSTEM_MTA		'postfix'
+
+!default DNS_DIRECTORY		'/etc/zone'
+!default DNS_HOST		'ns.client.com'
+!default DNS_DOMAIN		'client.com'
+!default DNS_IP			'127.0.0.1'
+!default DNS_SUB		'client.com'
+
+!default POP_SERVER		CLIENT_SERVER
+!default POP_SERVER_IP		CLIENT_SERVER_IP

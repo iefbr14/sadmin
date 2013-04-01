@@ -1,0 +1,129 @@
+H1: Revision Control Systems.
+
+Git is a suite of programs that allow one to track changes in source code and
+documents. When used by an administrator it allows him to undo catastrophic
+changes to critical system files. It also allows him to track both when and
+what changes have been made. The git files are kept in a
+sub-directory called '.git'.
+
+The number of commands that you need to know are quite small.
+
+!block table; style=grid
+Command     	Usage      
+git add -A .    To note what files have changes
+git commit      To check in a new version into the system.
+git status	To change the status of a file.
+git diff	To see differences between revisions.
+git checkout   	To check out an old version from the system.
+git log	    	To list the revisions.
+!endblock
+
+To better understand how git works, here is a sample session. We first
+create a file (called ToDo) containing some tasks. We are happy with it
+at this point so we put it into the RCS system.
+
+E: % git add ToDo
+E: % git commit
+E: RCS/ToDo,v  &lt;--  ToDo
+E: Enter description, terminated with single '.' or end of file:
+E: OTE: This is NOT the log message!
+E: >> Sample File
+E: >> .
+E: initial revision: 1.1
+E: done
+
+We make some more changes and create a second version.
+
+E: % ci -l ToDo
+E: RCS/ToDo,v  &lt;--  ToDo
+E: new revision: 1.2; previous revision: 1.1
+E: enter log message, terminated with single '.' or end of file:
+E: >> DAS -- Minor Changes
+E: >> .
+E: done
+
+Later we can check to see what changes have been made to a file.
+
+E: % rcsdiff ToDo
+E: ===================================================================
+E: RCS file: RCS/ToDo,v
+E: retrieving revision 1.2
+E: diff -r1.2 ToDo
+E: 16a17,18
+E: > 
+E: > New information added
+
+Oh-oh, someone added stuff that should not be there! Lets take a look at the
+log.
+
+E: % rlog ToDo
+E: RCS file: RCS/ToDo,v
+E: Working file: ToDo
+E: head: 1.2
+E: branch:
+E: locks: strict
+E:         drew: 1.2
+E: access list:
+E: symbolic names:
+E: comment leader: &quot;# &quot;
+E: keyword substitution: kv
+E: total revisions: 2;     selected revisions: 2
+E: description:
+E: Sample File
+E: 
+E: revision 1.2    locked by: drew;
+E: date: 1994/08/09 22:25:12;  author: drew;  state: Exp;  lines: +1 -1
+E: DAS -- Minor Changes
+E: ----------------------------
+E: revision 1.1
+E: date: 1994/08/09 22:24:41;  author: drew;  state: Exp;
+E: Initial revision
+E: =============================================================================
+
+We see that two revisions exists (1.1 and 1.2) and that they were both
+created by drew. We get a copy of the old version so we can take a closer
+look at it.
+
+E: % co -l -p1.2 ToDo  >ToDo.old
+E: RCS/ToDo,v  -->  stdout
+E: revision 1.2
+
+Yes it really is the version we want so replace the current version with the
+old version.
+
+E: % co -l -r1.2 ToDo
+E: RCS/ToDo,v  -->  ToDo
+E: revision 1.2
+E: writable ToDo exists; remove it? [ny](n): y
+E: done
+
+If RCS complains about locks then the {{rcs}} commands can be used to
+unlock and then re-lock a file.
+
+E: % rcs -u ToDo
+E: RCS file: RCS/ToDo,v
+E: 1.2 unlocked
+E: done
+
+E: % rcs -l ToDo
+E: RCS file: RCS/ToDo,v
+E: 1.2 locked
+E: done
+
+I personally tend to leave RCS controlled files locked, so that I can edit
+them easily. That is why the ci, and co commands all have the -l option. 
+For example the RCS information for this docuement is:
+
+E:
+E:   $Id: rcs.sdf,v 1.2 2000/11/21 20:51:19 iefbr14 Exp $
+E:   $Source: /cvsroot/watchdog/doc/sadmin/rcs.sdf,v $
+
+These lines are maintained by RCS and contain the last co date.
+When you create a document you can add
+
+E:   $B<Id:>$
+E:   $B<Source:>$
+
+to the document and RCS will fill in the rest after the the first 'ci -l'
+command. I use this form in all my documents so that when I look at printed
+versions and I can tell what version I am looking at.

@@ -1,0 +1,55 @@
+# $Id: sadmin.sdf,v 1.2 2000/11/18 04:06:24 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 1996-1997, Drew Sullivan (drew@ss.org).
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 1997-Sep-12 drew    Initial version
+# -----------------------------------------------------------------------
+#
+#
+!init OPT_LOOK='infomap'; OPT_STYLE='manual'
+!include 'Macro.sdm'
+
+# Define variables
+!define DOC_NAME    "System Admin"
+!define DOC_TYPE    "Guide"
+!define DOC_AUTHOR  "Drew Sullivan"
+!define DOC_TOC     2
+!define DOC_IX
+
+# Build the title page
+!build_title
+
+!include "../sadmin/overview.sdf"
+
+!include "../sadmin/tools.sdf"
+!include "../sadmin/make.sdf"
+!include "../sadmin/rcs.sdf"
+
+!include "../sadmin/dns.sdf"
+!include "../sadmin/resolv.sdf"
+
+!include "../sadmin/passwd.sdf"
+!include "../sadmin/nis.sdf"
+!include "../sadmin/netgroup.sdf"
+!include "../sadmin/automount.sdf"
+
+!include "../sadmin/mail.sdf"
+!include "../sadmin/qmail.sdf"
+!include "../sadmin/smail.sdf"
+!include "../sadmin/sendmail.sdf"
+!include "../sadmin/postfix.sdf"
+!include "../sadmin/ph.sdf"
+!include "../sadmin/pop.sdf"
+!include "../sadmin/uucp.sdf"
+
+!include "news.sdf"
+!include "cnews.sdf"
+!include "inn.sdf"
+
+!include "samba.sdf"
+

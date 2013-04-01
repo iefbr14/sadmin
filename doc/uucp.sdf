@@ -1,0 +1,153 @@
+H2: Uucp -- Unix to Unix Copy -- a file transfer/remote job execution system.
+
+Uucp allows unattended file transfer and remote job execution. It was
+originally built to allow dialup transfers of files and email. Rand will
+be using it for unattended file transfer especially to sites that are
+not permanently connected to the internet.
+
+!block table
+File                            Use
+/etc/passwd	                Password entry for the incoming site<br>
+/etc/uucp/Systems	        Identifies the remote site<br>
+/etc/uucp/Permissions	        Validate remote site.<br>
+/var/spool/uucp/.Admin/audit	Debug file for testing.<br>
+/var/spool/uucp/.Admin/...	Log files.
+!endblock
+
+H4: UUCP setup.
+
+There are several files that need setup in HDB uucp.  The <i>Systems</i>
+file controls who is 'known to me' or and information needed to make a
+valid connection with another system.  The <i>Permissions</i> file sets
+the security condition of the connection.  
+
+E: The Systems File (Comment symbol '#')
+E: # Rochester
+E: roc  Any   TCP,eg - 199.98.83.1 login: u_tor ssword: XXXXXXXX
+
+E: Where:<br>
+E: <column><indent>roc 	is the remote site name.<br>
+E: Any 	is a way of restriction when to call<br>
+E: TCP,eg	is the protocol to use<br>
+E: -	is the device to call (none needed for TCP/IP)<br>
+E: 199.98.83.1	is the IP number
+E: 
+
+login:	is the first string to expect.<br>
+E: u_tor	is our login for the remote site.<br>
+E: ssword:	is the next string to expect.<br>
+E: XXXXXXX	is the password to send.
+E: 
+
+</indent></column><br>
+E: Note that the 'login..XXX' is called the expect/send sequence.
+E: 
+
+The Permissions file (Comment symbol '#').
+E: 
+
+<pre>LOGNAME=u_roc MACHINE=roc VALIDATE=roc MYNAME=tor \
+E:         SENDFILES=yes REQUEST=yes \
+E:         READ=/usr/spool/uucppublic:/var/spool/uucppublic \
+E:         WRITE=/usr/spool/uucppublic:/var/spool/uucppublic \
+E:         COMMANDS=rmail:rnews:raliases
+E: </pre><br>
+E: Were<br>
+E: <column><indent>LOGNAME=u_roc 	Is the login name used by the remote site.<br>
+E: MACHINE=roc	These two entries validate the<br>
+E: VALIDATE=roc	remote machines name.<br>
+E: MYNAME=tor	This is the name we tell to the remote.<br>
+E: SENDFILES=yes	We can send send file to the remote<br>
+E: REQUEST=yes	The remote can request files from us.<br>
+E: READ=, WRITE=	What directories can be read/written.<br>
+E: COMMANDS=	List of commands that can be run.
+E: 
+
+</indent></column><br>
+E: <b>Warning</b>: Make sure there that the backslash is the last character on the line. If you have a blank after the backslash, the backslash escapes the bank and the entry ends early.
+E: 
+
+<br>
+E: <h4>1.10.2	Testing the connection.</h4>
+E: The following command will start up a reqest and let you test that<br>
+E: you can call the remote site.
+E: 
+
+	/usr/lib/uucp/Uutry SITE
+E: 
+
+Sample output from this command:
+E: 
+
+<pre>% /usr/lib/uucp/Uutry roc
+E: /usr/lib/uucp/uucico -r1 -sroc   -x5 &gt;/tmp/roc 2&gt;&amp;1&amp;
+E: tmp=/tmp/roc
+E: mchFind called (roc)
+E: name (DEFAULT) not found; return FAIL
+E: attempting to open /var/uucp/.Admin/account
+E: Job grade to process - 
+E: conn(roc)
+E: Trying entry from '/etc/uucp/Systems' - device type TCP,eg.
+E: Device Type TCP wanted
+E: Trying device entry '-' from '/etc/uucp/Devices'.
+E: processdev: calling setdevcfg(uucico, TCP)
+E: Internal caller type TCP
+E: tcpdial host 199.98.83.1, port 540
+E: set interface TCP
+E: getto ret 7
+E: expect: (login:)
+E: login:got it
+E: sendthem (u_tor^M)
+E: expect: (word)
+E:  Passwordgot it
+E: sendthem (XXXXXXXX^M)
+E: Login Successful: System=roc
+E: msg-ROK -R -U0x3fffff -x5
+E:  Rmtname roc,  Restart YES, Role MASTER,  Ifn - 7, Loginuser - root
+E: rmesg - 'P' got PgGetxf
+E: wmesg 'U'e
+E: Proto started e
+E: *** TOP ***  -  Role=1, setline - X
+E: wmesg 'H' 
+E: rmesg - 'H' got HY
+E:  PROCESS: msg - HY
+E: HUP:
+E: wmesg 'H'Y
+E: cntrl - 0
+E: send OO 0,exit code 0
+E: Conversation Complete: Status SUCCEEDED
+E: </pre><br>
+E: <br>
+
+The things to look for are typcalliy the responces to the
+Expect-Send sequences in that most often the problem will be invalid
+accounts/passwords. The responce 'You are unknown to me' which means
+that the name you sent (System=xxx) didn't match the names found in the
+Systems/Permissions file.
+
+Once everything is working the remote site needs to add an entry to the
+/etc/Poll file like the following to make sure that the toronto system
+gets called. (Here it is 8am and 12noon)
+
+E: # Lines starting with # are ignored.
+E: # NOTE a tab must follow the machine name
+E: tor	8 12
+E: </pre>
+
+H2: Send-File - A front end to uucp.
+
+Send-file is a script that simplifies the shipping of files between sites.
+There are two required arguments: the site to ship to, and a list of
+files.   If you don't specify these then send-file will prompt you for
+the missing arguments.  The site can be abbreviated to the first three
+letter of the city name and send-file will display the full name just
+before it starts to queue the file.  While queueing the files it will
+display the unix command that it is using to send the files.  It is a
+good idea to send email to the person requiring the files so that he
+will know to pick them up.
+
+E: % send-file
+E: Enter site to send files to: roc
+E: Enter list of files to send: My-File
+E: Sending files to Toronto via the following commands:
+E: uucp My-File roc!~/tor.rand.com/My-File

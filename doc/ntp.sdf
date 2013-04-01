@@ -1,0 +1,74 @@
+# $Id: ntp.sdf,v 1.1 2000/11/16 16:41:48 watchdog Exp $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan <drew@ss.org>.
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-01 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+H1: NTP - Network Time Protocol
+
+H2: Heirarchy
+
+!block table
+Level	Host
+1	clock.isc.org
+2	diamond.ss.org
+3	red 
+3	blue
+4	gold silver tin copper
+!endblock
+
+H2: Configuration
+
+There are 2 files to adjust for setting up NTP.  The first is
+F</etc/ntp/step-tickers>.  It is used to set the initial time used by the
+host at boot.  It should contain the hostnames of the hosts that can be
+asked for correct time.  The list should be ordered by the closest host
+that has correct time.
+
+>clock.isc.org
+>diamond.ss.org
+
+The second is F</etc/ntp.conf> where we add server lines listing
+the same hosts as found in step-tickers.
+
+>server clock.isc.org
+>server diamond.ss.org
+
+H2: Install
+
+Install the rpms.
+
+H2: Testing your setup.
+
+The command C<xntpdc> can be run to see if the ntp is running
+correctly.  Please note that it take a few minutes for xntpd
+to sync with a remote server.  If you run C<xntpdc> before
+xntpd has synced with the remote you will see the stratum (the st
+column) 
+
+>     remote           local      st poll reach  delay   offset    disp
+>=======================================================================
+>=LOCAL(0)        127.0.0.1       10   64    1 0.00000  0.000000 15.8850
+>=clock.isc.org   5.0.0.0         16   64    0 0.00000  0.000000 16.0000
+>=diamond.ss.org  5.0.0.0         16   64    0 0.00000  0.000000 16.0000
+
+Whereas here you can see that the stratum is now 1, and 2 and
+the local IP address is valid.
+
+>     remote           local      st poll reach  delay   offset    disp
+>=======================================================================
+>=LOCAL(0)        127.0.0.1       10   64  377 0.00000  0.000000 0.01001
+>*clock.isc.org   209.167.88.250   1 1024  377 0.08717 -0.009664 0.00063
+>=diamond.ss.org  209.167.88.250   2 1024  377 0.04095  0.010321 0.00169
+
+#H2: Config files
+#
+#!include '/etc/ntp/step-tickers'
+#!include '/etc/ntp.conf'

@@ -1,0 +1,152 @@
+# $Id: fixdist.sdf,v 1.2 2000/11/21 20:51:19 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan <drew@ss.org>.
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-01 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+H1: fixdist - a method of mirroring 
+
+!slide_down
+=head1 NAME
+
+fixdist -- a tool for updateing a local copy of a remote ftp distribution.
+
+=head1 SYNOPSIS
+
+fixdist [options]...
+
+=head1 OPTIONS
+
+>   -d     update the .Site.dir file to contain a remote ftp directory listing.
+>   -p     Process directory listing to generate .Site.missing and .Site.remove
+>   -g     Get missing files (listed in .Site.missing)
+>   -s :   Set size to : for max size of file to transfer
+>   -u     Update local files (same as -p && -g && -p)
+>   -R     Re-run until .Site.missing is empty.
+>   -S :   Wait : seconds between retries (default: 120 seconds)
+>   -t     touch files with date change (rather than reget)
+>   -x     Turn debugging on
+
+=head1 FILES
+
+=item .Site
+
+Used to hold all of the control information.
+
+=item .Site.dir
+
+Holds the current remote directory listing.  New copies are brought
+into F<.Site.dir.new> and the previous version is keep in F<.Site.dir.old>
+
+=item .Site.missing
+
+If it exists is an ftp like script to get all of the missing
+files.
+
+=item  .Site.remove
+
+If it exists is a shell script to remove files no longer in the distribution.
+The reason that it is not done automatically is that if the remote
+distribution goes away (as in the case that the directory has been moved
+elsewhere) you don't want all of your copy of the files to disappear.
+
+=head1 CONTROL FILE .Site
+
+=item site [domain.name] 
+
+Specifies the remote site to contact for the distribution.
+
+=item port {ftp-port-number}
+
+If defined specifies the tcp/ip port number for talking to the remote
+ftp daemon.  The default is the standard ftp port: 21.
+
+=item dir {remote-path}
+
+Specifies the remote directory to cd into before any other operations.
+This is required and it is fatal for this cd to fail.
+
+=item files {ls-arg-list}
+
+If defined specifies the directory argument sent to the remote ftp daemon.
+The default is C<-R>, which for ftp daemons that us F<ls> to generate 
+the directory listing, causes a recursive listing to be generated.  
+This allows you to mirror entire hierarchies.
+
+=item login {ftp-login-name}
+
+If defined specifies the login name sent to the remote ftp daemon.
+The default is C<anonymous>.
+
+=item passwd {ftp-remote-password}
+
+If defined specifies the password sent to the remote ftp deamon.
+The default is your login name and your local site name prepended with a dash,
+eg C<-user@my.site.dom>.
+
+=item ignore {file-pattern} | keep {file-pattern}
+
+This is used to control which files are keep or ignored from the distribution.
+Each of the files in the directory listing is matched with shell style
+wild card file patterns.  The matching is done in order and the results
+are based on the first match.  You can have as many C<keep> or C<ignore> request
+as you want.
+
+In addition to normal file-patterns you can also specify F<dir/...> to ignore
+whole directory trees.  Yes the three dots after the directory name
+are required.
+
+=item cdrom {volumn-name}
+
+Not yet supported.  The Idea is that a cdrom may contain a base distribution.
+and you are keeping a set of update relative to it.
+
+=item admin {email-address}
+
+Should list the archive site owner's  email address.
+
+=item owner {email-address}
+
+Should list the archive's owner's email address.
+
+=item www {url}
+
+Used by other scripts to generate html references for this archive.
+
+=item title {description}
+
+Used by other scripts to generate html indexes for this archive.
+
+=head1 EXAMPLE .Site
+
+>        site    ftp.ss.org
+>        dir     /pub/tools
+>        keep    fixdist*
+>        ignore  *
+
+=head1 TODO
+
+The code to push a distribution out to a site is very experimental.
+The whole concept of managing a push needs to be re-thought.
+
+The directory parsing only supportes unix ls output.  VMS, Microsoft
+windows formats are not yet handled gracefully.  Fortunately there
+are not a lot of sites that are wired this way.
+
+There is no support for matching uid/gid for mirroring a running
+site.
+
+=head1 Author
+
+> Drew Sullivan <drew@ss.org>
+> $Id: fixdist.sdf,v 1.2 2000/11/21 20:51:19 iefbr14 Exp $
+> $Source: /cvsroot/watchdog/doc/sadmin/fixdist.sdf,v $
+
+!slide_up

@@ -1,0 +1,90 @@
+# $Id: sdf.sdf,v 1.1 2000/11/16 16:05:06 iefbr14 Exp $
+# $Source: /cvsroot/watchdog/doc/sadmin/sdf.sdf,v $
+#
+# >>Copyright::
+# Copyright (c) 2000, Drew Sullivan <drew@ss.org>.
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 2000-Oct-01 drew    Initial version
+# -----------------------------------------------------------------------
+#
+H1: Creating documents under SDF.
+
+H2: The Basics
+
+There are only a few thinks that you need to know to start
+editing documents under SDF.
+
+* Comments are lines that begin with C<#>. They are ignore by SDF.
+* Heading are lines staring with H1: or H2:
+* Bulletted items are lines starting with C<*>
+* Examples are lines starting with E:
+* Blank lines separate paragraphs
+* Almost everything else is just text you type in.
+
+H2: Blocks
+
+A table is a block that starts with C<!block table> and ends with C<!endblock>.
+The first line in the block is the heading line.  Each column of
+the table starts with each word in the heading.  If you want spaces
+in a heading use underscores in the heading.  They are translated to
+spaces on output.
+
+E: !block table
+E: Header1         Header_2_with_spaces
+E: Data1           Data2
+E: Line 2          Data2
+E: !endblock
+
+Other blocks are available for other purposes.
+
+H2: Headings.
+
+Lines that begin with C<H1:>, C<H2:>, etc. are heading lines.
+All files should start with a H1 heading as the "Chapter/Section" heading.
+Sub-headings start with C<H2:> and sub-sub heading start with C<H3>:
+When building bigger documents there are the C<!slide_up> and C<!slide_down>
+commands to adjust these levels so don't worry about the depth that 
+this document is being used at.  Just start every file with C<H1:>, and
+the include document will adjust it dynamically as needed.
+
+H2: Font Control
+
+To adjust font control there you use a control letter followed by the
+text embedded in E<lt> and E<gt> characters.
+
+!block table
+Character	Use
+B		Bold
+I		Italic
+U		Underline
+C		Constant width text for embeded examples
+F		File reference
+E		Escape character such as lt for E<lt> and gt for E<gt>
+!endblock
+
+H2: Macros
+
+Embedding macros into your text you use C<E<2[>> macro-name C<E<2]>>.
+You define a macro with C<!define MACRO "Text">.  You can
+also default a value with C<!default MACRO "Text">.  The difference
+is that defines set the value, defaults set it only if its undefined.
+
+H2: Phrases
+
+Lastly for embedding special phrases in the document you
+write them within C<{{> and C<}}> with the first word being
+the phrase type.
+
+!block table
+Phrase		Use
+URL		A web url reference
+MAILTO		A web email address
+!endblock
+
+H2: Additional Documentation:
+
+* SDF Main site is here {{URL:http://www,unucom.com/mtr/sdf/}}

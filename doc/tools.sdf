@@ -1,0 +1,27 @@
+# $Id: tools.sdf,v 1.3 2000/11/21 20:51:19 iefbr14 Exp $
+#
+# >>Copyright::
+# Copyright (c) 1996-1997, Drew Sullivan (drew@ss.org).
+# You may distribute under the terms specified in the LICENSE file.
+#
+# >>History::
+# -----------------------------------------------------------------------
+# Date        Who     Change
+# 1997-Sep-12 drew    Initial version
+# -----------------------------------------------------------------------
+#
+
+H1: Unix tools.
+
+As part of the admin process some basic command should
+be know.  They are as follows:
+
+!block table
+Table	Description
+ssh	Secure Shell
+RCS	Revision Contol System
+CVS	Concurrent Version Control System
+make    Recipies for building programs
+fixdist Site mirroring.
+!endblock
+
